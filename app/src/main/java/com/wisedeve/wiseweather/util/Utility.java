@@ -32,6 +32,7 @@ public class Utility {
                     province.setProvinceCode(jsonObject.getInt("id"));
                     province.save();
                 }
+                return true;
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -57,6 +58,7 @@ public class Utility {
                     city.save();
 
                 }
+                return true;
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -77,10 +79,11 @@ public class Utility {
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
                     County county = new County();
                     county.setCountyName(jsonObject.getString("name"));
-                    county.setWeatherId(jsonObject.getString("weatherId"));
+                    county.setWeatherId(jsonObject.getString("weather_id"));
                     county.setCityId(cityId);
                     county.save();
                 }
+                return true;
             } catch (JSONException e) {
                 e.printStackTrace();
             }
