@@ -1,10 +1,14 @@
 package com.wisedeve.wiseweather.util;
 
 import android.text.TextUtils;
+import android.util.Log;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.wisedeve.wiseweather.db.City;
 import com.wisedeve.wiseweather.db.County;
 import com.wisedeve.wiseweather.db.Province;
+import com.wisedeve.wiseweather.gson.Weather;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -91,5 +95,15 @@ public class Utility {
         return false;
     }
 
+    public static Weather handleWeatherResponse(String response){
+        Weather weather = null;
+        try {
+            weather = new Gson().fromJson(response,Weather.class);
+        } catch (JsonSyntaxException e) {
+            e.printStackTrace();
+            Log.e("damon",e.getMessage());
+        }
+        return weather;
+    }
 
 }
