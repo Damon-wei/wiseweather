@@ -17,7 +17,7 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         if (sp.getString("weather",null) != null) {
             startActivity(new Intent(this, WeatherActivity.class));
-            //finish();
+            finish();
         }
     }
 }

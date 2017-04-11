@@ -1,5 +1,6 @@
 package com.wisedeve.wiseweather;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
@@ -19,10 +20,12 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.wisedeve.wiseweather.gson.Weather;
+import com.wisedeve.wiseweather.service.AutoUpdateService;
 import com.wisedeve.wiseweather.util.HttpUtil;
 import com.wisedeve.wiseweather.util.Utility;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -48,6 +51,8 @@ public class WeatherActivity extends AppCompatActivity {
     private TextView comfortText;
     private TextView carWashText;
     private TextView sportText;
+    private String nowTime;
+    private String today;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -101,7 +106,9 @@ public class WeatherActivity extends AppCompatActivity {
                 requestWeather(weatherId);
             }
         });
-        String bingPic = sharedPreferences.getString("bing_pic", null);
+        nowTime = new SimpleDateFormat("yyyy年MM月dd日 HH:mm:ss").format(System.currentTimeMillis());
+        today = nowTime.split(" ")[0];
+        String bingPic = sharedPreferences.getString(today, null);
         if (bingPic != null) {
             Glide.with(this).load(bingPic).into(bingPicImg);
         }else {
@@ -124,7 +131,9 @@ public class WeatherActivity extends AppCompatActivity {
             public void onResponse(Call call, Response response) throws IOException {
                 String bingPic = response.body().string();
                 SharedPreferences.Editor edit = PreferenceManager.getDefaultSharedPreferences(WeatherActivity.this).edit();
-                edit.putString("bing_pic",bingPic);
+                String nowTime = new SimpleDateFormat("yyyy年MM月dd日 HH:mm:ss").format(System.currentTimeMillis());
+                String today = nowTime.split(" ")[0];
+                edit.putString(today,bingPic);
                 edit.apply();
                 runOnUiThread(()->{
                     Glide.with(WeatherActivity.this).load(bingPic).into(bingPicImg);
@@ -179,6 +188,8 @@ public class WeatherActivity extends AppCompatActivity {
      * @param weather
      */
     private void showWeatherInfo(Weather weather) {
+        Intent intent = new Intent(this, AutoUpdateService.class);
+        startService(intent);
         String city = weather.getHeWeather5().get(0).getBasic().getCity();
         String updateTime = weather.getHeWeather5().get(0).getBasic().getUpdate().getLoc();
         String degree = weather.getHeWeather5().get(0).getNow().getTmp() + "℃";
