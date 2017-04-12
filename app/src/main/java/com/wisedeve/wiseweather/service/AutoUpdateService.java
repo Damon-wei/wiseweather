@@ -56,7 +56,7 @@ public class AutoUpdateService extends Service {
             HttpUtil.sendOkHttpRequest(weatherUrl, new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
-
+                    //添加功能1
                 }
                 @Override
                 public void onResponse(Call call, Response response) throws IOException {
